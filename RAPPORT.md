@@ -1,7 +1,5 @@
 # Partie 1
 
-[TOC]
-
 ## Objectif
 Le but de cette partie est de créer un serveur apache2 httpd tournant sur un container docker.
 
