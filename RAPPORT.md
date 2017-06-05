@@ -59,3 +59,49 @@ Si l'on veut faire une page un peu plus jolie rapidement. Il suffit de télécha
 
 On peut maintenant build l'image docker et run un container en faisant du port mapping. 
 Pour voir le résultat, ouvrir un navigateur web et aller à l'adresse 192.168.99.100:port_mappé.
+
+# Partie 2
+## Partie 2a
+### Création de l'arborescence de dossier
+On crée une arborescence de dossier pour préparer la création de notre image docker node.js.
+
+```
+cd docker-images
+mkdir express-image
+cd express-image
+```
+
+### Création du Dockerfile
+
+Dans cette arborescence, on crée un fichier **Dockerfile** dans lequel on écrit les lignes suivantes :
+
+```
+FROM node:4.4
+COPY src /opt/app
+CMD ["node", "/opt/app/index.js"]
+```
+
+Ces lignes indiquent blablu
+
+### Ajout des dépendances npm
+On crée un dossier **src** dans **express-image** et on s'y introduit.
+Dans ce dossier on exécute ensuite un ```npm init```. On rempli les champs comme il se doit et un fichier **package.json est créé**.
+Ce fichier contient les dépendances de bla blu.
+
+Une fois ce fichier générer, on exécute la commande ```npm install --save chance``` afin de créer le dossier **node_modules** et mettre à jour le fichier **package.json** avec une dépendance vers la librairie **chance**.
+Le module **chance** est un générateur de noms aléatoires.
+
+### Création du fichier index.js
+Il faut maintenant créer le fichier **index.js** dans le dossier **src** de **express-image**. Ce fichier va être édité avec le code suivant :
+
+```
+var Chance = require('chance');
+var chance = new Chance();
+
+console.log("Bonjour " + chance.name());
+```
+
+Ce code permet d'afficher en console un nom générer aléatoirement précéder d'une salutation.
+
+Une fois ce fichier créé, il suffit de build l'image à partir du **Dockerfile** créé précédemment et d'exécuter un container pour voir le résultat.
+Remarque notable : le container fini immédiatement son exécution, il ne s'affichera donc pas dans la liste des containers fournie par ```docker ps```.
