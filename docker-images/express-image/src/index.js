@@ -3,10 +3,8 @@ var chance = new Chance();
 var express = require('express');
 var app = express();
 
-//console.log("Bonjour " + chance.name());
-
 app.get('/', function(req, res) {
-	res.send(generateStudents());
+	res.send(generateProfile());
 });
 
 app.get('/test', function(req, res) {
@@ -17,32 +15,29 @@ app.listen(3000, function() {
 	console.log('Accepting HTTP requests on port 3000 !');
 });
 
-function generateStudents() 
+function generateProfile() 
 {
-	var numberOfStudents = chance.integer({
+	var numberOfProfiles = chance.integer({
 		min: 0,
 		max: 10
 	});
-	console.log(numberOfStudents);
-	var students = [];
-	for (var i = 0; i < numberOfStudents; i++)
+	console.log(numberOfProfiles);
+	var profiles = [];
+	for (var i = 0; i < numberOfProfiles; i++)
 	{
-		var gender = chance.gender();
-		var birthYear = chance.year({
-			min: 1986,
-			max: 1996
-		});
-		students.push({
-			firstName: chance.first({
-				gender: gender
-			}),
-			lastName: chance.last(),
-			gender: gender,
-			birthday: chance.birthday({
-				year: birthYear
-			})
+		var avatar = chance.avatar({fileExtension: 'jpg'});
+		var email = chance.email({domain: "res.com"});
+		var year = chance.integer({
+			min: 2000,
+			max: 2017
+		})
+		var lastConnection = chance.date({string: true, year: year});
+		profiles.push({
+			avatar: avatar,
+			email: email,
+			lastConnection: lastConnection
 		});
 	};
-	console.log(students);
-	return students;
+	console.log(profiles);
+	return profiles;
 }

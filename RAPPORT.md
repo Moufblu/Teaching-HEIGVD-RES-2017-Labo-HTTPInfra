@@ -85,11 +85,11 @@ Ces lignes indiquent blablu
 
 ### Ajout des dépendances npm
 On crée un dossier **src** dans **express-image** et on s'y introduit.
-Dans ce dossier on exécute ensuite un ```npm init```. On rempli les champs comme il se doit et un fichier **package.json est créé**.
+Dans ce dossier on exécute ensuite un ```npm init```. On rempli les champs comme il se doit et un fichier **package.json** est créé.
 Ce fichier contient les dépendances de bla blu.
 
-Une fois ce fichier générer, on exécute la commande ```npm install --save chance``` afin de créer le dossier **node_modules** et mettre à jour le fichier **package.json** avec une dépendance vers la librairie **chance**.
-Le module **chance** est un générateur de noms aléatoires.
+Une fois ce fichier généré, on exécute la commande ```npm install --save chance``` afin de créer le dossier **node_modules** et mettre à jour le fichier **package.json** avec une dépendance vers la librairie **chance**.
+Le module **chance** est un générateur de données aléatoires.
 
 ### Création du fichier index.js
 Il faut maintenant créer le fichier **index.js** dans le dossier **src** de **express-image**. Ce fichier va être édité avec le code suivant :
@@ -101,7 +101,7 @@ var chance = new Chance();
 console.log("Bonjour " + chance.name());
 ```
 
-Ce code permet d'afficher en console un nom générer aléatoirement précéder d'une salutation.
+Ce code permet d'afficher en console un nom généré aléatoirement précédé d'une salutation.
 
 Une fois ce fichier créé, il suffit de build l'image à partir du **Dockerfile** créé précédemment et d'exécuter un container pour voir le résultat.
 Remarque notable : le container fini immédiatement son exécution, il ne s'affichera donc pas dans la liste des containers fournie par ```docker ps```.
@@ -126,38 +126,38 @@ app.listen(3000, function() {
 Ce code permet de répondre à une requête GET HTTP par le message "Hello RES =D" si la requête se fait sur le répertoire /. Le serveur écoute sur le port 3000 et affiche le message "Accepting HTTP requests on port 3000 !" lorsque la communication peut commencer.
 
 ### Contenu dynamique
-On désire répondre à l'utilisateur avec du contenu dynamique lors d'un GET sur le répertoire /. On remplace alors ```res.send("Hello RES =D");``` par ```res.send("generateStudents()");```.
-On appelle donc une méthode qui génère des étudiants. Le code la méthode generateStudents est le suivant :
+On désire répondre à l'utilisateur avec du contenu dynamique lors d'un GET sur le répertoire /. On remplace alors ```res.send("Hello RES =D");``` par ```res.send("generateProfile()");```.
+On appelle donc une méthode qui génère des profiles. Le code la méthode generateProfile est le suivant :
 ```
-function generateStudents() 
+function generateProfile() 
 {
-	var numberOfStudents = chance.integer({
+	var numberOfProfiles = chance.integer({
 		min: 0,
 		max: 10
 	});
-	console.log(numberOfStudents);
-	var students = [];
-	for (var i = 0; i < numberOfStudents; i++)
+	console.log(numberOfProfiles);
+	var profiles = [];
+	for (var i = 0; i < numberOfProfiles; i++)
 	{
-		var gender = chance.gender();
-		var birthYear = chance.year({
-			min: 1986,
-			max: 1996
-		});
-		students.push({
-			firstName: chance.first({
-				gender: gender
-			}),
-			lastName: chance.last(),
-			gender: gender,
-			birthday: chance.birthday({
-				year: birthYear
-			})
+		var avatar = chance.avatar({fileExtension: 'jpg'});
+		var email = chance.email({domain: "res.com"});
+		var year = chance.integer({
+			min: 2000,
+			max: 2017
+		})
+		var lastConnection = chance.date({string: true, year: year});
+		profiles.push({
+			avatar: avatar,
+			email: email,
+			lastConnection: lastConnection
 		});
 	};
-	console.log(students);
-	return students;
+	console.log(profiles);
+	return profiles;
 }
 ```
 
-Pour voir le résultat, se connecter en telnet sur localhost sur le port 3000 et envoyer une requête GET sur le répertoire / ou alors ouvrir un navigateur à l'adresse localhost:3000.
+Pour voir le résultat une fois le fichier exécuté grâce à **Node**, se connecter en telnet sur localhost sur le port 3000 et envoyer une requête GET sur le répertoire / ou alors ouvrir un navigateur à l'adresse localhost:3000.
+
+Une fois que ce test fonctionne, build à nouveau l'image à partir du **Dockerfile**. En faisant un ```docker run``` avec port mapping, il devient alors possible de se connecter en telnet à l'adresse 192.168.99.100 sur le port mappé. On peut alors envoyer une requête GET et obtenir une réponse dynamique sous la forme d'un payload JSON.
+Il est aussi possible de se connecter à la même adresse depuis un navigateur WEB.
