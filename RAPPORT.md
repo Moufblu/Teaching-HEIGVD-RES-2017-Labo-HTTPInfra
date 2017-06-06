@@ -105,3 +105,59 @@ Ce code permet d'afficher en console un nom générer aléatoirement précéder 
 
 Une fois ce fichier créé, il suffit de build l'image à partir du **Dockerfile** créé précédemment et d'exécuter un container pour voir le résultat.
 Remarque notable : le container fini immédiatement son exécution, il ne s'affichera donc pas dans la liste des containers fournie par ```docker ps```.
+
+## Partie 2b
+### Création d'un serveur HTTP avec express
+On crée une dépendance dans le **package.json** du dossier **src** pour le framework **express** en faisant ```npm install --save express```.
+On édite ensuite le fichier **index.js** comme suit : 
+```
+var express = require('express');
+var app = express();
+
+app.get('/', function(req, res) {
+	res.send("Hello RES =D");
+});
+
+app.listen(3000, function() {
+	console.log('Accepting HTTP requests on port 3000 !');
+});
+```
+
+Ce code permet de répondre à une requête GET HTTP par le message "Hello RES =D" si la requête se fait sur le répertoire /. Le serveur écoute sur le port 3000 et affiche le message "Accepting HTTP requests on port 3000 !" lorsque la communication peut commencer.
+
+### Contenu dynamique
+On désire répondre à l'utilisateur avec du contenu dynamique lors d'un GET sur le répertoire /. On remplace alors ```res.send("Hello RES =D");``` par ```res.send("generateStudents()");```.
+On appelle donc une méthode qui génère des étudiants. Le code la méthode generateStudents est le suivant :
+```
+function generateStudents() 
+{
+	var numberOfStudents = chance.integer({
+		min: 0,
+		max: 10
+	});
+	console.log(numberOfStudents);
+	var students = [];
+	for (var i = 0; i < numberOfStudents; i++)
+	{
+		var gender = chance.gender();
+		var birthYear = chance.year({
+			min: 1986,
+			max: 1996
+		});
+		students.push({
+			firstName: chance.first({
+				gender: gender
+			}),
+			lastName: chance.last(),
+			gender: gender,
+			birthday: chance.birthday({
+				year: birthYear
+			})
+		});
+	};
+	console.log(students);
+	return students;
+}
+```
+
+Pour voir le résultat, se connecter en telnet sur localhost sur le port 3000 et envoyer une requête GET sur le répertoire / ou alors ouvrir un navigateur à l'adresse localhost:3000.
