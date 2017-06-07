@@ -166,4 +166,20 @@ Il est aussi possible de se connecter à la même adresse depuis un navigateur W
 
 * Container apache_php : 172.17.0.2
 * Container express_dynamic : 172.17.0.3
+* Mapping du reverse proxy : 8080:80
 
+** Dockerfile
+
+```
+FROM php:7.0-apache
+
+COPY conf/ /etc/apache2
+
+RUN a2enmod proxy proxy_http
+RUN a2ensite 000-* 001-*
+```
+
+On crée l'image en se basant sur l'image officielle php apache.
+On copie le contenu du dossier conf dans **/etc/apache2**
+On a besoin d'activer les modules **proxy** et **proxy_http** au démarrage des containers.
+On a besoin d'activer les configurations pour les virtualhosts commençant par **000-** et **001-**.
