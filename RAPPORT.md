@@ -161,3 +161,9 @@ Pour voir le résultat une fois le fichier exécuté grâce à **Node**, se conn
 
 Une fois que ce test fonctionne, build à nouveau l'image à partir du **Dockerfile**. En faisant un ```docker run``` avec port mapping, il devient alors possible de se connecter en telnet à l'adresse 192.168.99.100 sur le port mappé. On peut alors envoyer une requête GET et obtenir une réponse dynamique sous la forme d'un payload JSON.
 Il est aussi possible de se connecter à la même adresse depuis un navigateur WEB.
+
+# Partie 3
+
+* Container apache_php : 172.17.0.2
+* Container express_dynamic : 172.17.0.3
+
