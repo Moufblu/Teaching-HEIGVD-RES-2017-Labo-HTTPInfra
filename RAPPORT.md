@@ -183,3 +183,32 @@ On crée l'image en se basant sur l'image officielle php apache.
 On copie le contenu du dossier conf dans **/etc/apache2**
 On a besoin d'activer les modules **proxy** et **proxy_http** au démarrage des containers.
 On a besoin d'activer les configurations pour les virtualhosts commençant par **000-** et **001-**.
+
+Le dossier **conf** contient un dossier **sites-available** qui va être remplacé dans l'image docker une fois qu'on lancera le build.
+Dans ce dossier **sites-available** on peut trouver 2 fichiers :
+
+* 000-default.conf
+* 001-reverse-proxy.conf
+
+Le premier est le virtualhost par défaut, ce qui nous permet de renvoyer une erreur si on essaie de se connecter sur 192.168.99.100 sans préciser le header Host.
+Le second est le virtualhost de notre reverse-proxy qui va rediriger les requêtes vers le répertoire **/api/profiles/** vers le container fournissant du contenu dynamique (express_dynamic) ou alors traiter les requêtes à destination du dossier **/** vers le container fournissant du contenu static (apache_static).
+
+Le nom de domaine associé au reverse proxy est : demo.res.ch.
+
+Voici le contenu du fichier 001-reverse-proxy.conf :
+
+```
+<VirtualHost *:80>
+	ServerName demo.res.ch
+
+	ProxyPass "/api/profiles/" "http://172.17.0.3:3000/"
+	ProxyPassReverse "/api/profiles/" "http://172.17.0.3:3000/"
+
+	ProxyPass "/" "http://172.17.0.2:80/"
+	ProxyPassReverse "/" "http://172.17.0.2:80/"
+</VirtualHost>
+```
+
+Nous avons également modifié le fichier host en y ajoutant la ligne suivante :
+
+```192.168.99.100	demo.res.ch	#reverse-proxy, labo res http-infra```
