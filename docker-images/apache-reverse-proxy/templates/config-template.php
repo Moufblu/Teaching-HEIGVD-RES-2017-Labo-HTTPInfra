@@ -1,6 +1,6 @@
 <?php 
-	$static = $getenv('STATIC_APP');
-	$dynamic = $getenv('DYAMIC_APP');
+	$static = getenv('STATIC_APP');
+	$dynamic = getenv('DYNAMIC_APP');
  ?>
 
 <VirtualHost *:80>
