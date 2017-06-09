@@ -212,3 +212,86 @@ Voici le contenu du fichier 001-reverse-proxy.conf :
 Nous avons également modifié le fichier host en y ajoutant la ligne suivante :
 
 ```192.168.99.100	demo.res.ch	#reverse-proxy, labo res http-infra```
+
+La nouvelle image docker faisant office de reverse proxy se nomme **res/apache_rp**.
+
+# Partie 4
+## Modification des Dockerfiles
+On ajoute ces lignes dans les Dockerfiles des images créées précédemments :
+
+```
+RUN apt-get update && \
+	apt-get install -y vim
+```
+
+Ces lignes permettent d'installer vim sur les images.
+
+## Script de récupération des profiles
+
+blabla
+
+```
+<!-- Custom script to load profiles -->
+<script src="js/profiles.js"></script>
+```
+blabla
+
+
+blabla
+
+```
+function loadProfiles()
+{
+	$.getJSON("/api/profiles/", function( profiles ) {
+		console.log(profiles);
+		var message = "Nobody is here";
+		if (profiles.length > 0)
+		{
+			message = profiles[0].avatar + " " + profiles[0].email;
+		}
+		$(".text-muted").text(message);
+	});
+};
+
+loadProfiles();
+
+setInterval( loadProfiles, 3000);
+```
+
+# Partie 5
+## Modification du Dockerfile du reverse proxy
+
+```COPY apache2-foreground /usr/local/bin/```
+
+## Ajout du fichier apache2-foreground
+À partir du fichier de référence de l'image officiell : php 7.0
+
+Ajout de la récupération de deux variables d'environnement nommées :
+
+- STATIC_APP
+- DYNAMIC_APP
+
+## Ajout du fichier config-template.php
+
+blabla
+
+```
+<?php 
+	$static = $getenv('STATIC_APP');
+	$dynamic = $getenv('DYNMAIC_APP');
+ ?>
+
+<VirtualHost *:80>
+	ServerName demo.res.ch
+
+	ProxyPass '/api/profiles/' 'http://<?php print "$dynamic" ?>/'
+	ProxyPassReverse '/api/profiles/' 'http://<?php print "$dynamic" ?>/'
+
+	ProxyPass '/' 'http://<?php print "$static" ?>/'
+	ProxyPassReverse '/' 'http://<?php print "$static" ?>/'
+</VirtualHost>
+```
+
+Pour run avec les variables d'environnement et en intéractif :
+
+```docker run -e STATIC_APP=172.17.0.2:80 -e DYNAMIC_APP=172.17.0.3:3000 -it res/apache_rp /bin/bash```
