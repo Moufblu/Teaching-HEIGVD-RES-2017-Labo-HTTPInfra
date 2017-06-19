@@ -86,7 +86,7 @@ Ces lignes indiquent blablu
 ### Ajout des dépendances npm
 On crée un dossier **src** dans **express-image** et on s'y introduit.
 Dans ce dossier on exécute ensuite un ```npm init```. On rempli les champs comme il se doit et un fichier **package.json** est créé.
-Ce fichier contient les dépendances de bla blu.
+Ce fichier contient les dépendances de librairies node.
 
 Une fois ce fichier généré, on exécute la commande ```npm install --save chance``` afin de créer le dossier **node_modules** et mettre à jour le fichier **package.json** avec une dépendance vers la librairie **chance**.
 Le module **chance** est un générateur de données aléatoires.
@@ -168,7 +168,7 @@ Il est aussi possible de se connecter à la même adresse depuis un navigateur W
 * Container express_dynamic : 172.17.0.3
 * Mapping du reverse proxy : 8080:80
 
-** Dockerfile
+## Dockerfile
 
 ```
 FROM php:7.0-apache
@@ -228,16 +228,15 @@ Ces lignes permettent d'installer vim sur les images.
 
 ## Script de récupération des profiles
 
-blabla
+On crée un script qui sera exécuté depuis la machine statique afin de récupérer des données dynamiquement sur la machine fournissant du contenu dynamique.
+Pour ce faire, on modifie le fichier index.html de la machine statique et on ajoute un script javascript dans le dossier js du site internet statique (dans src).
 
 ```
 <!-- Custom script to load profiles -->
 <script src="js/profiles.js"></script>
 ```
-blabla
 
-
-blabla
+Voici la fonction javascript ajoutée dans le dossier js.
 
 ```
 function loadProfiles()
@@ -273,7 +272,7 @@ Ajout de la récupération de deux variables d'environnement nommées :
 
 ## Ajout du fichier config-template.php
 
-blabla
+On ajoute le fichier config-template.php permettant de mettre à jour dynamiquement le virtualhost de notre site grâce aux variables d'environnement passées au container docker.
 
 ```
 <?php 
